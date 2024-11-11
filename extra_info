@@ -1,0 +1,18 @@
+Task-Semantic textual similarity
+Your task is to assess the semantic similarity between two texts. For longer texts this can be solved very
+well using simple word overlap, but you will be working with short texts. You must build a system based
+on machine learning (use a regression model). Training and testing of your system should be done on
+datasets from the SemEval 2012 Task 6. You need to evaluate the performance of your system using
+Pearson and Spearman correlation with human similarity judgements.
+
+
+Explanation of Evaluation Metrics:
+
+Mean Squared Error (MSE): Measures how much the predicted similarity scores deviate from the true labels. 
+A lower MSE means the model’s predictions are closer to the true values.
+
+R-squared (R2): Represents how well the model explains the variance in the data. An R2 close to 1 indicates a good fit, meaning the model captures most of the relationship between sentence pairs and similarity labels.
+
+Pearson Correlation: Measures the linear relationship between predicted similarity scores and actual labels. A Pearson correlation close to 1 means that as one score increases, the other does too, in a roughly straight-line relationship.
+
+Spearman Correlation: Measures the rank correlation, which is useful if there are non-linear relationships. A Spearman correlation close to 1 means that the rankings of the similarity scores predicted by the model are close to the actual rankings of the labels.
