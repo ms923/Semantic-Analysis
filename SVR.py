@@ -15,7 +15,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 # Load dataset
-data_path = "data/dataset.txt"
+data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
 with open(data_path, 'r', encoding='utf-8') as file:
     lines = file.readlines()
 
