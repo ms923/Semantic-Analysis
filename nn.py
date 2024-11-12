@@ -1,5 +1,6 @@
 import os
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
 import numpy as np
 import pandas as pd
@@ -91,7 +92,8 @@ class SemanticSimilarityNN:
 def optimize_nn(X, y):
     def create_model(units1=128, units2=64, dropout1=0.2, dropout2=0.2, lr=0.001):
         model = Sequential()
-        model.add(Dense(units1, input_dim=X.shape[1], activation='relu'))
+        model.add(Input(shape=(X.shape[1],)))
+        model.add(Dense(units1, activation='relu'))
         model.add(Dropout(dropout1))
         model.add(Dense(units2, activation='relu'))
         model.add(Dropout(dropout2))
