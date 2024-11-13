@@ -33,6 +33,7 @@ class SemanticSimilarityAnalyzer:
         self.lemmatizer = WordNetLemmatizer()
         self.sentence_transformer = SentenceTransformer('paraphrase-MiniLM-L6-v2')
         self.word2vec_model = None
+        
 
     def preprocess_text(self, text):
         """
@@ -271,7 +272,7 @@ def main():
                     if proc_sent1 and proc_sent2:
                         preprocessed_sentences1.append(proc_sent1)
                         preprocessed_sentences2.append(proc_sent2)
-                        labels.append(label_value)
+                        labels.append(label_value)s
                     else:
                         print(f"Warning: Skipping line {line_num} due to empty preprocessing result")
                         print(f"Original sentences: '{sent1}' | '{sent2}'")

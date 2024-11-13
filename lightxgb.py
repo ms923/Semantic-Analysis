@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from lightgbm import LGBMRegressor
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.ensemble import StackingRegressor
 from scipy.stats import pearsonr, spearmanr
 from gensim.models import Word2Vec
 from nltk.tokenize import word_tokenize
@@ -14,6 +14,10 @@ from difflib import SequenceMatcher
 from collections import Counter
 import string
 import nltk
+from lightgbm import LGBMRegressor
+from xgboost import XGBRegressor
+from sklearn.model_selection import GridSearchCV
+
 # Download required NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -71,7 +75,7 @@ class EnhancedSemanticSimilarity:
         return np.array([len_diff, jaccard, char_sim, freq_sim])
 
 # Load and preprocess data
-data_path = "data/dataset.txt"  # Replace with your actual path
+data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
 with open(data_path, 'r', encoding='utf-8') as file:
     lines = file.readlines()
 
@@ -128,29 +132,43 @@ y = np.array(labels)
 
 # Train-test split and model training
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Hyperparameter tuning for LightGBM and XGBoost models using GridSearchCV
 lgbm_model = LGBMRegressor(objective='regression', n_estimators=100, learning_rate=0.05, max_depth=5)
-lgbm_model.fit(X_train, y_train)
+xgb_model = XGBRegressor(objective='reg:squarederror', n_estimators=100, max_depth=5, learning_rate=0.1)
+
+# Define hyperparameter grid
+param_grid = {
+    'learning_rate': [0.01, 0.05, 0.1],
+    'max_depth': [3, 5, 7],
+    'n_estimators': [100, 150, 200],
+}
+
+# Tune XGBoost
+grid_search_xgb = GridSearchCV(xgb_model, param_grid, cv=3, scoring='neg_mean_squared_error')
+grid_search_xgb.fit(X_train, y_train)
+best_xgb_model = grid_search_xgb.best_estimator_
+
+# Tune LightGBM
+grid_search_lgbm = GridSearchCV(lgbm_model, param_grid, cv=3, scoring='neg_mean_squared_error')
+grid_search_lgbm.fit(X_train, y_train)
+best_lgbm_model = grid_search_lgbm.best_estimator_
+
+# Ensemble model using stacking
+stacked_model = StackingRegressor(
+    estimators=[('xgb', best_xgb_model), ('lgbm', best_lgbm_model)],
+    final_estimator=LGBMRegressor()
+)
+stacked_model.fit(X_train, y_train)
 
 # Predictions and evaluation
-y_pred = lgbm_model.predict(X_test)
+y_pred = stacked_model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 pearson_corr, _ = pearsonr(y_test, y_pred)
 spearman_corr, _ = spearmanr(y_test, y_pred)
 
-print("Evaluation Results:")
-print(f"Mean Squared Error (MSE): {mse}")
-print(f"R-squared (R2): {r2}")
-print(f"Pearson Correlation: {pearson_corr}")
-print(f"Spearman Correlation: {spearman_corr}")
-
-# Error analysis for insights
-errors = np.abs(y_test - y_pred)
-error_indices = np.argsort(errors)[::-1]
-print("\nTop 5 worst predictions:")
-for idx in error_indices[:5]:
-    print(f"\nSentence 1: {original_sentences1[idx]}")
-    print(f"Sentence 2: {original_sentences2[idx]}")
-    print(f"True similarity: {y_test[idx]:.2f}")
-    print(f"Predicted similarity: {y_pred[idx]:.2f}")
-    print(f"Error: {errors[idx]:.2f}")
+print(f'Mean Squared Error: {mse}')
+print(f'R2 Score: {r2}')
+print(f'Pearson Correlation: {pearson_corr}')
+print(f'Spearman Correlation: {spearman_corr}')
