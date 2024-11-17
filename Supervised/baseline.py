@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 
 # Load your data from the file
-data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\clean_train.txt'
+data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
 
 # Assuming your dataset is structured like: sentence1 \t sentence2 \t similarity_score
 # Load the data

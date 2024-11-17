@@ -71,7 +71,7 @@ class EnhancedSemanticSimilarity:
         return np.array([len_diff, jaccard, char_sim, freq_sim])
 
 # Load and preprocess data
-data_path = "data/dataset.txt"  # Replace with your actual path
+data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
 with open(data_path, 'r', encoding='utf-8') as file:
     lines = file.readlines()
 

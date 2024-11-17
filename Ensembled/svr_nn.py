@@ -295,7 +295,7 @@ def embed_sentences(sentences):
 
 def main():
     analyzer = SemanticSimilarityAnalyzer()
-    data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
+    data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\clean_train.txt'
     
     # Load and preprocess data
     original_sentences1, original_sentences2, preprocessed_sentences1, preprocessed_sentences2, labels = [], [], [], [], []

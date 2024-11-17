@@ -227,7 +227,7 @@ def main():
     analyzer = SemanticSimilarityAnalyzer()
     
     # Load dataset
-    data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\dataset.txt'
+    data_path = r'C:\AllMyCodes\IR\semantic_ana\Semantic-Analysis\data\clean_train.txt'
     with open(data_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
     
